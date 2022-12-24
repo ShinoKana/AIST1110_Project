@@ -5,7 +5,7 @@ Project includes Reinforcement Learning presented on Pacman game built with Pyga
 
 Install the requirements:  
 
-    pip install -r requirements.txt
+    pip install -r requirements.txt
 
 To manually play the game with the classic maze:
 
