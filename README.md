@@ -3,6 +3,19 @@ Game: Pacman
 
 Project includes Reinforcement Learning presented on Pacman game built with Pygame.
 
+Install the requirements:  
+
+    pip install -r requirements.txt
+
 To manually play the game with the classic maze:
 
-    python pacman_play.py -lay classic -snd
+    python pacman_play.py -lay classic
+   
+Run the game with other layouts:     
+    
+    python pacman_play.py -lay small
+Or
+    python pacman_play.py –lay optional
+
+Run the game and display the state matrix:
+    python pacman_play.py -stt
