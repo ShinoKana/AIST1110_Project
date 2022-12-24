@@ -21,6 +21,7 @@ Run the game and display the state matrix:
 
     python pacman_play.py -stt
 
-Basic interface:
+Classic interface:
 
-![image](https://user-images.githubusercontent.com/100673497/209434251-702294e0-5d1c-4305-822f-de8149d35946.png)
+![image](https://user-images.githubusercontent.com/100673497/209435322-53a74faa-bcf6-4e30-b737-ea3b78613ad1.png)
+
