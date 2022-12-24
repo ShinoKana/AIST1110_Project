@@ -9,8 +9,8 @@ from gym.utils import seeding
 from pacman_play import Controller
 from game import Game
 from map import Map
-from src.utils.action import Action
-from src.utils.game_mode import GameMode
+from utils.action import Action
+from utils.game_mode import GameMode
 
 
 class PacmanEnv(gym.Env):

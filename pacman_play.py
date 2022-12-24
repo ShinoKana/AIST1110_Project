@@ -7,6 +7,8 @@ from pygame_menu.themes import Theme
 from game import Game
 from map import Map
 
+from agent import Agent
+import pickle
 
 class Controller(object):
     """
@@ -65,6 +67,16 @@ class Controller(object):
                           onchange=self.change_sound)
         game_menu.mainloop(self.screen)
 
+def train(args):
+    agent = Agent(layout=args.layout[0])
+    agent.train(episodes=args.episodes[0])
+
+def run(args):
+    agent = Agent(layout=args.layout[0])
+    with open(agent.q_table_file, 'rb') as fp:
+        agent.q_table = pickle.load(fp)
+    controller = Controller(layout_name=args.layout[0], act_sound=args.sound, act_state=args.state, ai_agent=agent)
+    controller.load_menu()
 
 def main(args):
     controller = Controller(layout_name=args.layout[0], act_sound=args.sound, act_state=args.state, ai_agent=None)
@@ -77,6 +89,12 @@ def parse_args():
                         help="Name of layout to load in the game")
     parser.add_argument('-snd', '--sound', action='store_true', default=True,
                         help="Activate sounds in the game")
+    parser.add_argument('-t', '--train', action='store_true',
+                        help='Train the agent')
+    parser.add_argument('-e', '--episodes', type=int, nargs=1,
+                        help="The number of episode to use during training")
+    parser.add_argument('-r', '--run', action='store_true',
+                        help='run the trained agent')
     parser.add_argument('-stt', '--state', action='store_true',
                         help="Display the state matrix of the game")
 
@@ -85,6 +103,12 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    main(parse_args())
+    args = parse_args()
+    if args.train:
+        train(args)
+    elif args.run:
+        run(args)
+    else:
+        main(args)
     pg.quit()
     sys.exit()
