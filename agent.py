@@ -135,4 +135,3 @@ class Agent(ABC):
 
                 with open(self.q_table_file, 'wb') as fp:
                     pickle.dump(dict(q_table), fp) 
-

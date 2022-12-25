@@ -2,13 +2,13 @@ import argparse
 import pygame as pg
 import pygame_menu
 import sys
+import pickle
 
 from pygame_menu.themes import Theme
 from game import Game
 from map import Map
-
 from agent import Agent
-import pickle
+
 
 class Controller(object):
     """
@@ -39,13 +39,27 @@ class Controller(object):
             state_active=self.act_state,
             agent=self.ai_agent
         )
-        game.start_game()
+        game.start_game(restart=True)
 
     def change_sound(self, state, value):
-        if state == "open":
+        if state[0] == "open":
             self.act_sound = True
+            Game(
+                maze=self.maze,
+                screen=self.screen,
+                sounds_active=self.act_sound,
+                state_active=self.act_state,
+                agent=self.ai_agent
+            )
         else:
             self.act_sound = False
+            Game(
+                maze=self.maze,
+                screen=self.screen,
+                sounds_active=self.act_sound,
+                state_active=self.act_state,
+                agent=self.ai_agent
+            )
 
     @staticmethod
     def get_screen(act_state: bool, width: int, height: int) -> pg.SurfaceType:
@@ -67,9 +81,11 @@ class Controller(object):
                           onchange=self.change_sound)
         game_menu.mainloop(self.screen)
 
+
 def train(args):
     agent = Agent(layout=args.layout[0])
     agent.train(episodes=args.episodes[0])
+
 
 def run(args):
     agent = Agent(layout=args.layout[0])
@@ -77,6 +93,7 @@ def run(args):
         agent.q_table = pickle.load(fp)
     controller = Controller(layout_name=args.layout[0], act_sound=args.sound, act_state=args.state, ai_agent=agent)
     controller.load_menu()
+
 
 def main(args):
     controller = Controller(layout_name=args.layout[0], act_sound=args.sound, act_state=args.state, ai_agent=None)
@@ -103,6 +120,7 @@ def parse_args():
 
 
 if __name__ == '__main__':
+    main(parse_args())
     args = parse_args()
     if args.train:
         train(args)

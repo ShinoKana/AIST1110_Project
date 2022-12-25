@@ -74,10 +74,13 @@ class Game(object):
         self.player = Pacman()
         self.path_finder = PathFinder(self.maze.matrix_from_lookup_table(PATH_FINDER_LOOKUP_TABLE))
         self.ghosts = [Ghost(i, GHOST_COLORS[i], self.path_finder) for i in range(0, self.maze.get_number_of_ghosts())]
+        self.channel_background = pg.mixer.Channel(6)
 
         if self.sounds_active:
             self.init_mixer()
             self.load_sounds()
+        else:
+            self.channel_background.stop()
 
         if self.screen is not None:
             self.load_assets()
@@ -166,9 +169,18 @@ class Game(object):
             pg.display.flip()
             self.clock.tick(60)
 
+            if self.player.lives == 0:
+                self.is_run = False
+                self.is_enter = True
+                self.set_mode(3)
+                self.draw()
+                pg.display.flip()
+                self.clock.tick(60)
+                break
+
         while self.is_enter:
             for event in pg.event.get():
-                print(event)
+                # print(event)
                 self.set_mode(3)
                 self.draw()
                 pg.display.flip()
@@ -204,9 +216,9 @@ class Game(object):
                 if event.key == pg.K_ESCAPE:
                     self.is_run = False
                     self.is_enter = True
-                    self.start_game(restart=True)
                     if self.sounds_active:
                         self.channel_background.stop()
+                    self.start_game(restart=False)
 
     @staticmethod
     def check_keyboard_inputs() -> Action:
@@ -316,7 +328,7 @@ class Game(object):
                     self.set_mode(GameMode.wait_to_start)
         elif self.game_mode == GameMode.game_over:
             if pg.key.get_pressed()[pg.K_RETURN]:
-                self.start_game(restart=True)
+                self.start_game(restart=False)
         elif self.game_mode == GameMode.wait_to_start:
             if self.mode_timer == 60:
                 self.set_mode(GameMode.normal)
