@@ -4,7 +4,6 @@ import sys
 import numpy as np
 import random
 from typing import Tuple
-import random
 
 import gym
 import math
