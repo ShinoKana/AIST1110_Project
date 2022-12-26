@@ -32,12 +32,10 @@ class SkipFrame(gym.Wrapper):
         return obs, total_reward, done, info
 
 class Agent(ABC):
-    name = 'agent'
-
     def __init__(self, **kwargs):
         super().__init__()
         self.layout = kwargs['layout']
-        self.q_table_file = ''.join([self.name, '_', self.layout, '.pkl'])
+        self.q_table_file = ''.join(['agent_', self.layout, '.pkl'])
         self.q_table = None
         self.render_mode = kwargs['mode']
 
@@ -104,10 +102,10 @@ class Agent(ABC):
         discount = 0.99
         epsilon = 1.0
         epsilon_min = 0.1
-        epsilon_decay_rate = 2 * 1e3
+        epsilon_decay_rate = 2 * 1e3 # designed for 10000 episodes
         print("Training mode ", self.render_mode)
         env = gym.make('pacman-v0', layout=self.layout)
-        env = SkipFrame(env, skip=10)
+        env = SkipFrame(env, skip=5)
         q_table = defaultdict(lambda: np.zeros(env.action_space.n))
         state = Agent.get_state(env.game.maze.get_player_home())
 
@@ -126,8 +124,6 @@ class Agent(ABC):
             print(x[episode])
             print(epsilon_now)
             y.append(epsilon_now)
-
-            print(f'epsilon: {epsilon_now}')
 
             for i in count():
                 env.render(self.render_mode)
@@ -170,14 +166,16 @@ class Agent(ABC):
 
                 if done:
                     print(f'{episode} episode finished after {i} timesteps')
+                    print(f'epsilon: {epsilon_now}')
                     print(f'Total rewards: {total_rewards}')
                     print(f'game score: {info["game score"]}')
                     print(f'win: {info["win"]}')
                     break
 
-                with open(self.q_table_file, 'wb') as fp:
-                    pickle.dump(dict(q_table), fp)
         env.close()
+        with open(self.q_table_file, 'wb') as fp:
+            pickle.dump(dict(q_table), fp)
+        
         plt.plot(x, y)
         plt.xlabel('episode')
         plt.ylabel('epsilon')
