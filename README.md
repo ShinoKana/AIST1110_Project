@@ -15,6 +15,7 @@ To manually play the game with the classic maze:
 Run the game with other layouts:
     
     python pacman_play.py –m human -lay <MAZE_NAME>
+    
     # (maze: classic, small, optional; classic by default)
      
 e.g.,
@@ -30,6 +31,7 @@ Run the game and display the state matrix:
 Agent training:
 
     python pacman_play.py –m <MODE> -lay <MAZE_NAME> -t –e <EPISODES>
+    
     #(mode: human, rgb_array, rgb_array by default)
     #(episodes: integer, specify how many episodes you want to train)
     
