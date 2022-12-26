@@ -10,7 +10,7 @@ from pygame.surface import SurfaceType
 from pacman import Pacman
 from constants import GHOST_COLORS, TILE_SIZE, SCORE_COLWIDTH, MODES_TO_ZERO, PATH_FINDER_LOOKUP_TABLE, MOVE_MODES, \
     ROOT_DIR
-from agent import Agent
+from src.env.agent import Agent
 from ghost import Ghost
 from map import Map
 from utils.action import Action

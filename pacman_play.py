@@ -7,7 +7,7 @@ import pickle
 from pygame_menu.themes import Theme
 from game import Game
 from map import Map
-from agent import Agent
+from src.env.agent import Agent
 
 
 class Controller(object):
@@ -83,12 +83,12 @@ class Controller(object):
 
 
 def train(args):
-    agent = Agent(layout=args.layout[0])
+    agent = Agent(layout=args.layout[0], mode=args.mode)
     agent.train(episodes=args.episodes[0])
 
 
 def run(args):
-    agent = Agent(layout=args.layout[0])
+    agent = Agent(layout=args.layout[0], mode=args.mode)
     with open(agent.q_table_file, 'rb') as fp:
         agent.q_table = pickle.load(fp)
     controller = Controller(layout_name=args.layout[0], act_sound=args.sound, act_state=args.state, ai_agent=agent)
@@ -102,6 +102,9 @@ def main(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Argument for the Pacman Game')
+    parser.add_argument('-m', '--mode', type=str, help="The render mode",
+                    choices=['human', 'rgb_array'], 
+                    default='rgb_array')
     parser.add_argument('-lay', '--layout', type=str, nargs=1, default=["classic"],
                         help="Name of layout to load in the game")
     parser.add_argument('-snd', '--sound', action='store_true', default=True,
@@ -114,6 +117,7 @@ def parse_args():
                         help='run the trained agent')
     parser.add_argument('-stt', '--state', action='store_true',
                         help="Display the state matrix of the game")
+
 
     args = parser.parse_args()
     return args
